@@ -15,7 +15,7 @@ var (
 )
 
 var results []string
-
+var gotraining []string
 // GetHandler handles the index route
 func GetHandler(w http.ResponseWriter, r *http.Request) {
   if len(results) == 0 {
