@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	//"io/ioutil"
 	"log"
 	"net/http"
-)
+
+	"../models"
+	"../dao"
+	)
 
 var (
 	// flagPort is the open port the application listens on
@@ -31,18 +34,24 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 
 // PostHandler converts post request body to string
 func PostHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, "Error reading request body",
-				http.StatusInternalServerError)
-		}
-		results = append(results, string(body))
+	// if r.Method == "POST" {
+	// 	body, err := ioutil.ReadAll(r.Body)
+	// 	if err != nil {
+	// 		http.Error(w, "Error reading request body",
+	// 			http.StatusInternalServerError)
+	// 	}
+	// 	results = append(results, string(body))
 
-		fmt.Fprint(w, "POST done")
-	} else {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-	}
+	// 	fmt.Fprint(w, "POST done")
+	// } else {
+	// 	http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+	// }
+
+	var content models.Content
+	_ = json.NewDecoder(r.Body).Decode(&content)
+	result := dao.InsertOneValue(content)
+	//json.NewEncoder(w).Encode(content)
+	fmt.Fprint(w, result)
 }
 
 func init() {
@@ -57,4 +66,6 @@ func main() {
 
 	log.Printf("listening on port %s", *flagPort)
 	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
+
+	
 }
