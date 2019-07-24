@@ -1,12 +1,15 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
-	"fmt"
-	//"io/ioutil"
+	"github.com/gin-gonic/gin"
 	"log"
+	"fmt"
 	"net/http"
+	"encoding/json"
+
+
+	// "io/ioutil"
 
 	"../models"
 	"../dao"
@@ -20,38 +23,35 @@ var (
 var results []string
 var gotraining []string
 // GetHandler handles the index route
-func GetHandler(w http.ResponseWriter, r *http.Request) {
-  if len(results) == 0 {
-    return 
-  }
- 	jsonBody, err := json.Marshal(results)
-	if err != nil {
-		http.Error(w, "Error converting results to json",
-			http.StatusInternalServerError)
-	}
-	w.Write(jsonBody)
+func getQuestionsHandler(c *gin.Context) {
+  
+}
+
+func getContentHandler(c *gin.Context) {
+	
+	resp := dao.GetAllContent()
+	c.JSON(http.StatusOK, resp)
 }
 
 // PostHandler converts post request body to string
-func PostHandler(w http.ResponseWriter, r *http.Request) {
-	// if r.Method == "POST" {
-	// 	body, err := ioutil.ReadAll(r.Body)
-	// 	if err != nil {
-	// 		http.Error(w, "Error reading request body",
-	// 			http.StatusInternalServerError)
-	// 	}
-	// 	results = append(results, string(body))
-
-	// 	fmt.Fprint(w, "POST done")
-	// } else {
-	// 	http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-	// }
-
+func postContentHandler(c *gin.Context) {
 	var content models.Content
-	_ = json.NewDecoder(r.Body).Decode(&content)
-	result := dao.InsertOneValue(content)
-	//json.NewEncoder(w).Encode(content)
-	fmt.Fprint(w, result)
+	_ = json.NewDecoder(c.Request.Body).Decode(&content)
+	fmt.Printf("Pradeep 1 : %+v\n",content)
+
+	count := dao.GetTotalDoc();
+	content.ContentID = count + 1
+	fmt.Printf("Pradeep : %+v\n",content)
+	dao.InsertDoc(content)
+	var response models.Response
+
+	response.Status = "Success"
+	response.StatusCode = 200
+	response.DocId = count + 1
+	c.JSON(http.StatusOK, response)
+	// fmt.Fprint(w, result)
+
+	
 }
 
 func init() {
@@ -59,13 +59,28 @@ func init() {
 	flag.Parse()
 }
 
+func addRoutes(router *gin.RouterGroup){
+	router.GET("/questions:Id", getQuestionsHandler)
+	router.GET("/content", getContentHandler)
+	router.POST("/content", postContentHandler)
+}
+
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", GetHandler)
-	mux.HandleFunc("/post", PostHandler)
+	engine, endpointGrp := newEngine()
+	group := endpointGrp.Group("/services")
+	addRoutes(group)
+	err := engine.Run(fmt.Sprintf(":%s", "9000"))
+	if err != nil {
+		log.Printf("Fatal: Service failed to start.")
+	}
 
 	log.Printf("listening on port %s", *flagPort)
-	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
-
 	
 }
+
+func newEngine() (*gin.Engine, *gin.RouterGroup) {
+	eng := gin.Default()
+	endpointGrp := eng.Group("");
+	return eng, endpointGrp
+}
+
