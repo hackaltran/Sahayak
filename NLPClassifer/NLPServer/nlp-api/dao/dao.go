@@ -149,7 +149,7 @@ func GetAllContent()  (response string) {
 	// fmt.Printf("Found a single document: %+v\n", result)
 	
 	findOptions := options.Find()
-	// findOptions.SetLimit(2)
+//	findOptions.SetLimit(10)
 
 	var results []* models.Content
 
@@ -177,7 +177,7 @@ func GetAllContent()  (response string) {
 	// Close the cursor once finished
 	cur.Close(context.TODO())
 
-	fmt.Printf("Found multiple documents (array of pointers): %+v\n", results[0])
+        //	fmt.Printf("Found multiple documents (array of pointers): %+v\n", results[0])
 
 	resp, err := json.Marshal(results)
     if err != nil {

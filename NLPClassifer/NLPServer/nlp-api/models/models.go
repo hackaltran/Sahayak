@@ -16,7 +16,8 @@ import (
 type Content struct {
 	ContentData string 
 	ContentID int 
-	Subject string 
+	Subject string
+        Questions string
 }
 
 type Response struct {
