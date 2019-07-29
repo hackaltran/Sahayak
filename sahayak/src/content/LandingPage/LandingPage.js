@@ -1,7 +1,7 @@
 import React from 'react';
 import Accept from '../../components/common/Accept';
 import SendText from '../../components/common/SendText';
-// import Dictaphone from '../../components/common/Dictaphone';
+import Dictaphone from '../../components/common/Dictaphone';
 
 import {
   Tabs,
@@ -27,21 +27,21 @@ import {
 //   console.dir(pages)
 // })
 
+const props = {
+  tabs: {
+    selected: 0,
+    triggerHref: '#',
+    role: 'navigation',
+  },
+  tab: {
+    href: '#',
+    role: 'presentation',
+    tabIndex: 0,
+  },
+};
+
 const LandingPage = () => {
-  
-  const props = {
-    tabs: {
-      selected: 0,
-      triggerHref: '#',
-      role: 'navigation',
-    },
-    tab: {
-      href: '#',
-      role: 'presentation',
-      tabIndex: 0,
-    },
-  };
-  
+
   return (
     <div className="bx--grid bx--grid--full-width landing-page">
       <div className="bx--row landing-page__banner">
@@ -70,7 +70,7 @@ const LandingPage = () => {
               <div className="bx--grid bx--grid--no-gutter bx--grid--full-width">
                 <div className="bx--row landing-page__tab-content">
                   <div className="bx--col-lg-16">
-                    {/* <Dictaphone /> */}
+                    <Dictaphone />
                   </div>
                 </div>
               </div>
@@ -98,7 +98,6 @@ const LandingPage = () => {
           <div className="bx--col-md-3 bx--col-lg-3">Generate Questions to test your knowledge</div>
         </div>
       </div>
-      
     </div>
   );
 };

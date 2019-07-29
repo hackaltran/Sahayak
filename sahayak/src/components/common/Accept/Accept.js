@@ -33,10 +33,6 @@ const baseStyle = {
   
     function onDrop(acceptedFiles) {
       console.log(acceptedFiles, 'accepted files');
-    //   const url='http://127.0.0.1:8000/api/serice';
-    //   const formData={file:acceptedFiles};
-    //   return axios.post(url, formData)
-    //   .then(response => console.log(response));
     }
   
     const {

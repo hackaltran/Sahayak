@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from "prop-types";
 import SpeechRecognition from 'react-speech-recognition';
 
@@ -17,7 +17,7 @@ const propTypes = {
     if (!browserSupportsSpeechRecognition) {
       return null;
     }
-  
+    
     return (
       <div>
         <button onClick={resetTranscript}>Reset</button>
@@ -25,7 +25,7 @@ const propTypes = {
       </div>
     );
   };
-  
+
   Dictaphone.propTypes = propTypes;
   
   export default SpeechRecognition(Dictaphone);

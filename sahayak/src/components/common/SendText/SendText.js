@@ -1,10 +1,11 @@
 import React from 'react';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
+import InlineLoading from 'carbon-components-react/lib/components/InlineLoading';
 
 class SendText extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {value: 'Text goes here?'};
+      this.state = {value: '', DocId: '', progress: false};
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -14,40 +15,54 @@ class SendText extends React.Component {
     }
   
     handleSubmit(event) {
-      // this.props.history.push('/repos');
-      
-      alert('You said: ' + this.state.value);
-      const headers = {
-        'Content-type': 'application/json'
-      }
-      const obj = {
-        ContentData: this.state.value,
-        Subject: "Content"
-      }
-      axios.post('http://169.38.109.246:9000/services/content', { obj }, { headers: headers })
-      .then(function (response) {
-        alert('Sahayk reponse: ' + response);
-        if (response.statusCode === 200 && response.docId !== '') {
-            if (localStorage.getItem('docId')) {
-              localStorage.removeItem('docId');
-              localStorage.setItem('docId', response.docId);
-            } else {
-              localStorage.setItem('docId', response.docId);
-            }
-            this.props.history.push('/repo')
-        }
+      this.setState({
+        progress: true
       })
-      .catch(function (error) {
-        alert('Error ' + error);
-      });
+      const dataObj = {
+        Subject: 'topic',
+        ContentData: this.state.value
+      }
+
+      fetch('http://169.38.109.246:8000/services/content', {
+        method: 'post',
+        body: JSON.stringify(dataObj)
+      }).then(response => response.json()).then(data =>
+          this.setState({
+            DocId: data.DocId,
+            progress: false
+          })
+        ).then(() => {
+          localStorage.setItem('DocId', this.state.DocId)
+        }).catch((error) => {
+          console.log(error);
+        })
       event.preventDefault();
     }
   
     render() {
       return (
+        
         <form onSubmit={this.handleSubmit}>
-          <textarea value={this.state.value} onChange={this.handleChange}></textarea>
-          <input type="submit" value="Submit" />
+          <div className="bx--grid bx--grid--full-width">
+            <div className="bx--row">
+            <textarea style={{ height: '100px', width: '800PX' }} value={this.state.value} onChange={this.handleChange}></textarea>
+            </div>
+            <div className="bx--row" style={{ paddingTop: '5px' }}>
+            <input  type="submit" value="Submit" style={{ marginRight: '10px' }} />
+            {
+              (this.state.progress) ? <InlineLoading
+              style={{ marginLeft: '1rem' }}
+              description="Generating Questions..."
+            /> : ''
+            }
+            
+                { this.state.DocId !=='' ? <Link to="/questions">
+                        <button type="button">
+                              Get questions
+                        </button>
+                    </Link> : '' }
+            </div>
+          </div>
         </form>
       );
     }
