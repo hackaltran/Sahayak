@@ -17,7 +17,14 @@ type Content struct {
 	ContentData string 
 	ContentID int 
 	Subject string
-        Questions string
+        Questions []Quest
+}
+
+type Quest struct {
+        Question string
+        Confidence string
+        Answer string
+
 }
 
 type Response struct {

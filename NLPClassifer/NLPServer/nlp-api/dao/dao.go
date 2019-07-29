@@ -188,3 +188,46 @@ func GetAllContent()  (response string) {
 	return string(resp)
 }
 
+
+func GetDoc(docId int)(string){
+
+    // Set client options
+    clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+
+    // Connect to MongoDB
+    client, err := mongo.Connect(context.TODO(), clientOptions)
+    // Get a handle for your collection
+    collection := client.Database(DBNAME).Collection(COLLNAME)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Check the connection
+    err = client.Ping(context.TODO(), nil)
+    if err != nil {
+        log.Fatal(err)
+    
+    }
+
+
+    filter := bson.D{{"contentid", docId}}
+
+
+    // Find a single document
+    var result models.Content
+
+    err = collection.FindOne(context.TODO(), filter).Decode(&result)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Found a single document: %+v\n", result)
+
+
+    resp, err := json.Marshal(result)
+    if err != nil {
+        log.Fatal("Cannot encode to JSON ", err)
+    }
+    return string(resp)
+}
+

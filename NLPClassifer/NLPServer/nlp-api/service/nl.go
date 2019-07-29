@@ -135,7 +135,7 @@ func postContentHandler(c *gin.Context) {
                 //fmt.Println("Pradeep float:",s) // 3.14159265
                                 
                 if s <= 3 {
-                       continue;
+                       fmt.Println("11")
                 }
             }
             /*for _, abc := range newtext{
