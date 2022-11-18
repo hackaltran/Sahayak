@@ -20,7 +20,7 @@
     "react-dom": "^16.8.6",
     "react-dropzone": "^10.1.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
+    "react-scripts": "5.0.1",
     "react-speech-recognition": "^2.0.4"
   },
   "scripts": {
@@ -35,7 +35,7 @@
   "browserslist": [],
   "devDependencies": {
     "@storybook/addon-actions": "^5.1.9",
-    "@storybook/react": "^5.1.9",
+    "@storybook/react": "^6.5.13",
     "node-sass": "^4.12.0"
   }
 }
